@@ -10,7 +10,6 @@ type AppScreen = 'entry' | 'home';
 
 export default function Home() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('entry');
-  const [cursorVariant, setCursorVariant] = useState<'default' | 'play'>('default');
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -28,6 +27,10 @@ export default function Home() {
     setCurrentScreen('home');
   };
 
+  const handleLogoClick = () => {
+    setCurrentScreen('entry');
+  };
+
   if (!isMounted) {
     return (
       <div
@@ -40,7 +43,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen cursor-none">
       {/* Custom cursor */}
-      <CustomCursor variant={cursorVariant} />
+      <CustomCursor />
 
       <AnimatePresence mode="wait">
         {currentScreen === 'entry' && (
@@ -62,7 +65,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <HomeScreen />
+            <HomeScreen onLogoClick={handleLogoClick} />
           </motion.div>
         )}
       </AnimatePresence>

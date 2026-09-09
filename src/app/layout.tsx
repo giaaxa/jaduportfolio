@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   description: 'Portfolio of JADU, a Visual Effects Compositor and Post Production Artist specializing in commercials, music videos, film, CG compositing, and post-production.',
   keywords: ['visual effects', 'compositor', 'VFX', 'post production', 'motion design', 'JADU'],
   authors: [{ name: 'JADU' }],
+  icons: {
+    icon: '/assets/jadu-logo.png',
+    apple: '/assets/jadu-logo.png',
+  },
   openGraph: {
     title: 'JADU — Visual Effects Compositor',
     description: 'Portfolio of JADU, a Visual Effects Compositor and Post Production Artist.',
