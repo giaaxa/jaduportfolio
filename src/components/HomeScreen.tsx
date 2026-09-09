@@ -10,6 +10,7 @@ import ProjectCard from './ProjectCard';
 import SystemInfo from './SystemInfo';
 import AudioController from './AudioController';
 import MobileWorkCategories from './MobileWorkCategories';
+import DPad from './DPad';
 
 interface HomeScreenProps {
   onLogoClick?: () => void;
@@ -47,6 +48,34 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
       }
       return newLevel;
     });
+  };
+
+  // Navigation arrays for D-pad
+  const navItems = ['work', 'about', 'contact'];
+  const categories = ['commercials', 'music-videos', 'film', 'cg-compositing', 'post-production'];
+
+  const handleDPadUp = () => {
+    const currentIndex = categories.indexOf(activeCategory);
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : categories.length - 1;
+    setActiveCategory(categories[newIndex]);
+  };
+
+  const handleDPadDown = () => {
+    const currentIndex = categories.indexOf(activeCategory);
+    const newIndex = currentIndex < categories.length - 1 ? currentIndex + 1 : 0;
+    setActiveCategory(categories[newIndex]);
+  };
+
+  const handleDPadLeft = () => {
+    const currentIndex = navItems.indexOf(activeNav);
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : navItems.length - 1;
+    setActiveNav(navItems[newIndex]);
+  };
+
+  const handleDPadRight = () => {
+    const currentIndex = navItems.indexOf(activeNav);
+    const newIndex = currentIndex < navItems.length - 1 ? currentIndex + 1 : 0;
+    setActiveNav(navItems[newIndex]);
   };
 
   const showWorkSection = activeNav === 'work';
@@ -213,17 +242,27 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="absolute bottom-3 left-4 right-4 md:left-6 md:right-6 lg:left-8 lg:right-8 flex items-center justify-between"
+          className="absolute bottom-3 left-4 right-4 md:left-6 md:right-6 lg:left-8 lg:right-8 flex items-end justify-between"
         >
-          <span
-            className="text-[9px] md:text-[10px] tracking-[0.1em] text-[#050505]/25"
-            style={{ fontFamily: 'var(--font-primary)' }}
-          >
-            &copy; 2026 JADU / VISUAL EFFECTS
-          </span>
+          <div className="flex items-end gap-4">
+            <div className="hidden md:block" onClick={(e) => e.stopPropagation()}>
+              <DPad
+                onUp={handleDPadUp}
+                onDown={handleDPadDown}
+                onLeft={handleDPadLeft}
+                onRight={handleDPadRight}
+              />
+            </div>
+            <span
+              className="text-[9px] md:text-[10px] tracking-[0.1em] text-[#050505]/25 mb-1"
+              style={{ fontFamily: 'var(--font-primary)' }}
+            >
+              &copy; 2026 JADU / VISUAL EFFECTS
+            </span>
+          </div>
 
           <div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 mb-1"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             <div className="flex items-center gap-1">
