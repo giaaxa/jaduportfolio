@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import JaduLogo from './JaduLogo';
 import AmbientBackground from './AmbientBackground';
@@ -16,11 +16,21 @@ const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export default function EntryScreen({ onEnter }: EntryScreenProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const { enableSound, disableSound, playMainMusic } = useAudio();
+  const { enableSound, disableSound, playMainMusic, playIntroSound, stopIntroSound } = useAudio();
+
+  // Play intro sound when entry screen loads
+  useEffect(() => {
+    // Small delay to ensure audio context is ready
+    const timer = setTimeout(() => {
+      playIntroSound();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [playIntroSound]);
 
   const handleEnterWithSound = () => {
     enableSound();
     setIsExiting(true);
+    // Stop intro and start main music with slight delay
     setTimeout(() => {
       playMainMusic();
     }, 400);
@@ -29,6 +39,7 @@ export default function EntryScreen({ onEnter }: EntryScreenProps) {
 
   const handleEnterWithoutSound = () => {
     disableSound();
+    stopIntroSound();
     setIsExiting(true);
     setTimeout(onEnter, 900);
   };

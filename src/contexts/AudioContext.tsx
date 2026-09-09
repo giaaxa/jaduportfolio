@@ -5,11 +5,14 @@ import React, { createContext, useContext, useState, useRef, useCallback, useEff
 interface AudioContextType {
   isSoundEnabled: boolean;
   isPlaying: boolean;
+  isIntroPlaying: boolean;
   volume: number;
   enableSound: () => void;
   disableSound: () => void;
   toggleSound: () => void;
   setVolume: (volume: number) => void;
+  playIntroSound: () => void;
+  stopIntroSound: () => void;
   playMainMusic: () => void;
   pauseMainMusic: () => void;
 }
@@ -19,8 +22,10 @@ const AudioContext = createContext<AudioContextType | null>(null);
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isIntroPlaying, setIsIntroPlaying] = useState(false);
   const [volume, setVolumeState] = useState(0.25);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mainAudioRef = useRef<HTMLAudioElement | null>(null);
+  const introAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Check for stored preference
@@ -31,24 +36,40 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Create audio element for background music
-    if (typeof window !== 'undefined' && !audioRef.current) {
-      audioRef.current = new Audio('/assets/background-video.mp4');
-      audioRef.current.loop = true;
-      audioRef.current.volume = volume;
+    // Create audio elements
+    if (typeof window !== 'undefined') {
+      // Main music - loops
+      if (!mainAudioRef.current) {
+        mainAudioRef.current = new Audio('/assets/main-music.mp3');
+        mainAudioRef.current.loop = true;
+        mainAudioRef.current.volume = volume;
+      }
+      // Intro sound - plays once
+      if (!introAudioRef.current) {
+        introAudioRef.current = new Audio('/assets/intro-sound.mp3');
+        introAudioRef.current.loop = false;
+        introAudioRef.current.volume = volume;
+      }
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (mainAudioRef.current) {
+        mainAudioRef.current.pause();
+        mainAudioRef.current = null;
+      }
+      if (introAudioRef.current) {
+        introAudioRef.current.pause();
+        introAudioRef.current = null;
       }
     };
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
+    if (mainAudioRef.current) {
+      mainAudioRef.current.volume = volume;
+    }
+    if (introAudioRef.current) {
+      introAudioRef.current.volume = volume;
     }
   }, [volume]);
 
@@ -60,9 +81,13 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const disableSound = useCallback(() => {
     setIsSoundEnabled(false);
     localStorage.setItem('jadu-sound-preference', 'disabled');
-    if (audioRef.current) {
-      audioRef.current.pause();
+    if (mainAudioRef.current) {
+      mainAudioRef.current.pause();
       setIsPlaying(false);
+    }
+    if (introAudioRef.current) {
+      introAudioRef.current.pause();
+      setIsIntroPlaying(false);
     }
   }, []);
 
@@ -79,21 +104,55 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setVolumeState(Math.max(0, Math.min(1, newVolume)));
   }, []);
 
-  const playMainMusic = useCallback(async () => {
-    if (audioRef.current && isSoundEnabled) {
+  const playIntroSound = useCallback(async () => {
+    if (introAudioRef.current) {
       try {
-        await audioRef.current.play();
+        introAudioRef.current.currentTime = 0;
+        await introAudioRef.current.play();
+        setIsIntroPlaying(true);
+      } catch {
+        console.log('Intro autoplay blocked by browser');
+      }
+    }
+  }, []);
+
+  const stopIntroSound = useCallback(() => {
+    if (introAudioRef.current) {
+      // Fade out intro
+      const fadeOut = setInterval(() => {
+        if (introAudioRef.current && introAudioRef.current.volume > 0.05) {
+          introAudioRef.current.volume = Math.max(0, introAudioRef.current.volume - 0.1);
+        } else {
+          clearInterval(fadeOut);
+          if (introAudioRef.current) {
+            introAudioRef.current.pause();
+            introAudioRef.current.volume = volume;
+            introAudioRef.current.currentTime = 0;
+          }
+          setIsIntroPlaying(false);
+        }
+      }, 50);
+    }
+  }, [volume]);
+
+  const playMainMusic = useCallback(async () => {
+    // Stop intro first
+    stopIntroSound();
+
+    if (mainAudioRef.current) {
+      try {
+        mainAudioRef.current.currentTime = 0;
+        await mainAudioRef.current.play();
         setIsPlaying(true);
       } catch {
-        // Autoplay blocked - fail silently
         console.log('Autoplay blocked by browser');
       }
     }
-  }, [isSoundEnabled]);
+  }, [stopIntroSound]);
 
   const pauseMainMusic = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+    if (mainAudioRef.current) {
+      mainAudioRef.current.pause();
       setIsPlaying(false);
     }
   }, []);
@@ -103,11 +162,14 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       value={{
         isSoundEnabled,
         isPlaying,
+        isIntroPlaying,
         volume,
         enableSound,
         disableSound,
         toggleSound,
         setVolume,
+        playIntroSound,
+        stopIntroSound,
         playMainMusic,
         pauseMainMusic,
       }}
