@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import JaduLogo from './JaduLogo';
 import AmbientBackground from './AmbientBackground';
@@ -16,16 +16,16 @@ const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 export default function EntryScreen({ onEnter }: EntryScreenProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const { enableSound, disableSound, playMainMusic, playIntroSound, stopIntroSound } = useAudio();
 
-  // Play intro sound when entry screen loads
-  useEffect(() => {
-    // Small delay to ensure audio context is ready
-    const timer = setTimeout(() => {
+  // Play intro sound after first user interaction
+  const handleFirstInteraction = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
       playIntroSound();
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [playIntroSound]);
+    }
+  };
 
   const handleEnterWithSound = () => {
     enableSound();
@@ -65,8 +65,9 @@ export default function EntryScreen({ onEnter }: EntryScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.8, delay: 0.2 } }}
-          className="fixed inset-0 flex flex-col items-center justify-center min-h-screen"
+          className="fixed inset-0 flex flex-col items-center justify-center min-h-screen cursor-pointer"
           onAnimationComplete={() => setHasLoaded(true)}
+          onClick={handleFirstInteraction}
         >
           <AmbientBackground intensity="subtle" />
 
@@ -83,19 +84,48 @@ export default function EntryScreen({ onEnter }: EntryScreenProps) {
               <JaduLogo size="large" animate={hasLoaded || true} />
             </motion.div>
 
+            {/* Click to begin prompt - shown before interaction */}
+            <AnimatePresence>
+              {!hasInteracted && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4, delay: 1.2 }}
+                  className="absolute bottom-[-60px] left-1/2 -translate-x-1/2"
+                >
+                  <span
+                    className="text-[10px] tracking-[0.2em] uppercase text-[#050505]/40"
+                    style={{ fontFamily: 'var(--font-primary)' }}
+                  >
+                    click anywhere to begin
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Buttons - shown after interaction */}
             <motion.div
               animate={isExiting ? { opacity: 0, y: 20 } : {}}
               transition={{ duration: 0.4, ease: easeOutExpo }}
               className="flex flex-col sm:flex-row gap-4 sm:gap-5"
+              style={{
+                opacity: hasInteracted ? 1 : 0,
+                pointerEvents: hasInteracted ? 'auto' : 'none',
+                transition: 'opacity 0.5s ease'
+              }}
             >
               <motion.button
                 custom={0}
                 variants={buttonVariants}
                 initial="hidden"
-                animate="visible"
+                animate={hasInteracted ? "visible" : "hidden"}
                 whileHover={{ scaleX: 1.04 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={handleEnterWithSound}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEnterWithSound();
+                }}
                 className="relative px-8 py-3 rounded-full bg-[#050505] text-white text-sm font-medium tracking-wide lowercase overflow-hidden group transition-transform duration-300"
                 style={{ fontFamily: 'var(--font-primary)' }}
               >
@@ -112,10 +142,13 @@ export default function EntryScreen({ onEnter }: EntryScreenProps) {
                 custom={1}
                 variants={buttonVariants}
                 initial="hidden"
-                animate="visible"
+                animate={hasInteracted ? "visible" : "hidden"}
                 whileHover={{ backgroundColor: '#050505', color: '#ffffff' }}
                 whileTap={{ scale: 0.98 }}
-                onClick={handleEnterWithoutSound}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEnterWithoutSound();
+                }}
                 className="px-8 py-3 rounded-full bg-white text-[#050505] text-sm font-medium tracking-wide lowercase border border-[#050505] transition-colors duration-400"
                 style={{ fontFamily: 'var(--font-primary)' }}
               >
