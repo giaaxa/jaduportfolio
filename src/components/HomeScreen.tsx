@@ -87,7 +87,6 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="relative min-h-screen overflow-hidden"
-      onClick={handleClick}
     >
       {/* Atmospheric Background with video */}
       <AmbientBackground intensity="normal" showVideo />
@@ -226,17 +225,17 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: easeOutExpo }}
-                className="flex-1 w-full"
+                className="flex-1 w-full overflow-hidden"
               >
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-full">
-                  {/* Profile Photo - Fixed */}
+                <div className="flex flex-row gap-4 md:gap-6 lg:gap-10 h-full">
+                  {/* Profile Photo - Fixed, smaller on mobile */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.1, duration: 0.5, ease: easeOutExpo }}
                     className="flex-shrink-0 self-start"
                   >
-                    <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden mx-auto lg:mx-0">
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 rounded-xl md:rounded-2xl overflow-hidden">
                       <img
                         src="/assets/profile-photo.jpeg"
                         alt="Profile"
@@ -252,48 +251,53 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2, duration: 0.5, ease: easeOutExpo }}
-                    className="flex-1 max-w-2xl h-[300px] md:h-[350px] lg:h-[400px] overflow-y-scroll pr-4"
-                    style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(5,5,5,0.2) transparent' }}
+                    className="flex-1 max-w-2xl min-h-0 max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-300px)] md:max-h-[calc(100vh-260px)] overflow-y-auto pr-2 md:pr-4"
+                    style={{
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: 'rgba(5,5,5,0.2) transparent',
+                      WebkitOverflowScrolling: 'touch',
+                      touchAction: 'pan-y'
+                    }}
                   >
-                    <div className="space-y-4 md:space-y-5 pb-12">
+                    <div className="space-y-3 md:space-y-4 pb-16">
                       <p
-                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
                       >
                         Through Visual Effects and Post Production, I work across the creative and technical sides of the frame. With a strong interest in culture, environment and visual storytelling.
                       </p>
                       <p
-                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
                       >
                         I spent the first 11 years of my life in India, and that has had a big influence on the way I see images. It&apos;s not just about colour or visual richness, but the layering of everyday life — old and new, quiet and chaotic, traditional and modern all existing at once. I think that made me more aware of atmosphere, detail and the way an environment can carry its own story. I&apos;m interested in culture more broadly too, and in how different places, people and visual languages shape mood, style and storytelling.
                       </p>
                       <p
-                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
                       >
                         My work spans compositing, 3D, editing and post-production, and I enjoy the balance between technical problem-solving and creating something visually striking.
                       </p>
                       <p
-                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
                       >
                         Some of my favourite films are <span className="italic">Haider</span>, <span className="italic">Pride & Prejudice</span>, <span className="italic">Memories of Murder</span> and <span className="italic">La Haine</span> — very different worlds, but all incredibly strong in atmosphere and visual identity. That&apos;s what I&apos;m drawn to most: work that feels distinctive, immersive and full of character.
                       </p>
 
                       {/* Hobbies */}
-                      <div className="pt-3 md:pt-4">
+                      <div className="pt-2 md:pt-4">
                         <span
-                          className="text-xs tracking-[0.15em] uppercase text-[#050505]/40 block mb-2"
+                          className="text-[10px] md:text-xs tracking-[0.15em] uppercase text-[#050505]/40 block mb-2"
                           style={{ fontFamily: 'var(--font-primary)' }}
                         >
                           When I&apos;m not working
                         </span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1.5 md:gap-2">
                           {['Sewing', 'Hiking', 'Travelling', 'Photography'].map((hobby) => (
                             <span
                               key={hobby}
-                              className="px-3 py-1.5 text-xs md:text-sm bg-[#050505]/[0.03] rounded-full text-[#050505]/70 border border-[#050505]/[0.06]"
+                              className="px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-sm bg-[#050505]/[0.03] rounded-full text-[#050505]/70 border border-[#050505]/[0.06]"
                               style={{ fontFamily: 'var(--font-primary)' }}
                             >
                               {hobby}
@@ -351,9 +355,11 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
             </span>
           </div>
 
-          <div
-            className="flex items-center gap-2 mb-1"
+          <button
+            onClick={handleClick}
+            className="flex items-center gap-2 mb-1 cursor-pointer hover:opacity-70 transition-opacity"
             style={{ fontFamily: 'var(--font-mono)' }}
+            aria-label="Charge battery"
           >
             <div className="flex items-center gap-1">
               <div className="relative w-6 h-3 border border-[#050505]/50 rounded-sm">
@@ -367,7 +373,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 {batteryLevel}%
               </span>
             </div>
-          </div>
+          </button>
         </motion.footer>
       </div>
 
