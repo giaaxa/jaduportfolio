@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
   { id: 'work', label: 'Work', icon: Folder },
   { id: 'reel', label: 'Reel', icon: PlayCircle },
   { id: 'stills', label: 'Stills', icon: Image },
-  { id: 'about', label: 'About', icon: User },
+  { id: 'profile', label: 'Profile', icon: User },
   { id: 'contact', label: 'Contact', icon: Mail },
   { id: 'archive', label: 'Archive', icon: Database },
 ];

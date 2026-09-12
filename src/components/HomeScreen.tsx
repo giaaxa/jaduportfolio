@@ -51,7 +51,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
   };
 
   // Navigation arrays for D-pad
-  const navItems = ['work', 'about', 'contact'];
+  const navItems = ['work', 'profile', 'contact'];
   const categories = ['commercials', 'music-videos', 'film', 'cg-compositing', 'post-production'];
 
   const handleDPadUp = () => {
@@ -79,6 +79,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
   };
 
   const showWorkSection = activeNav === 'work';
+  const showProfileSection = activeNav === 'profile';
 
   return (
     <motion.div
@@ -217,8 +218,97 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
               </motion.div>
             )}
 
+            {/* Profile Section */}
+            {showProfileSection && (
+              <motion.div
+                key="profile-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="flex-1 w-full"
+              >
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-full">
+                  {/* Profile Photo - Fixed */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1, duration: 0.5, ease: easeOutExpo }}
+                    className="flex-shrink-0 self-start"
+                  >
+                    <div className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden mx-auto lg:mx-0">
+                      <img
+                        src="/assets/profile-photo.jpeg"
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        style={{ filter: 'grayscale(20%) contrast(1.05)' }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+                    </div>
+                  </motion.div>
+
+                  {/* Profile Content - Scrollable */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5, ease: easeOutExpo }}
+                    className="flex-1 max-w-2xl h-[300px] md:h-[350px] lg:h-[400px] overflow-y-scroll pr-4"
+                    style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(5,5,5,0.2) transparent' }}
+                  >
+                    <div className="space-y-4 md:space-y-5 pb-12">
+                      <p
+                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        style={{ fontFamily: 'var(--font-primary)' }}
+                      >
+                        Through Visual Effects and Post Production, I work across the creative and technical sides of the frame. With a strong interest in culture, environment and visual storytelling.
+                      </p>
+                      <p
+                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        style={{ fontFamily: 'var(--font-primary)' }}
+                      >
+                        I spent the first 11 years of my life in India, and that has had a big influence on the way I see images. It&apos;s not just about colour or visual richness, but the layering of everyday life — old and new, quiet and chaotic, traditional and modern all existing at once. I think that made me more aware of atmosphere, detail and the way an environment can carry its own story. I&apos;m interested in culture more broadly too, and in how different places, people and visual languages shape mood, style and storytelling.
+                      </p>
+                      <p
+                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        style={{ fontFamily: 'var(--font-primary)' }}
+                      >
+                        My work spans compositing, 3D, editing and post-production, and I enjoy the balance between technical problem-solving and creating something visually striking.
+                      </p>
+                      <p
+                        className="text-sm md:text-base leading-relaxed text-[#050505]/80"
+                        style={{ fontFamily: 'var(--font-primary)' }}
+                      >
+                        Some of my favourite films are <span className="italic">Haider</span>, <span className="italic">Pride & Prejudice</span>, <span className="italic">Memories of Murder</span> and <span className="italic">La Haine</span> — very different worlds, but all incredibly strong in atmosphere and visual identity. That&apos;s what I&apos;m drawn to most: work that feels distinctive, immersive and full of character.
+                      </p>
+
+                      {/* Hobbies */}
+                      <div className="pt-3 md:pt-4">
+                        <span
+                          className="text-xs tracking-[0.15em] uppercase text-[#050505]/40 block mb-2"
+                          style={{ fontFamily: 'var(--font-primary)' }}
+                        >
+                          When I&apos;m not working
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {['Sewing', 'Hiking', 'Travelling', 'Photography'].map((hobby) => (
+                            <span
+                              key={hobby}
+                              className="px-3 py-1.5 text-xs md:text-sm bg-[#050505]/[0.03] rounded-full text-[#050505]/70 border border-[#050505]/[0.06]"
+                              style={{ fontFamily: 'var(--font-primary)' }}
+                            >
+                              {hobby}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Content for other nav items */}
-            {!showWorkSection && (
+            {!showWorkSection && !showProfileSection && (
               <motion.div
                 key="coming-soon"
                 initial={{ opacity: 0 }}
