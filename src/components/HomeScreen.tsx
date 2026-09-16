@@ -94,7 +94,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
       <AmbientBackground intensity="normal" showVideo />
 
       {/* Main content grid */}
-      <div className="relative z-10 h-screen max-h-screen flex flex-col p-4 sm:p-5 md:p-6 lg:px-8 lg:py-4 overflow-hidden">
+      <div className="relative z-10 h-screen flex flex-col p-4 sm:p-5 md:p-6 lg:px-8 lg:py-4">
         {/* Top bar */}
         <header className="flex items-start justify-between mb-2 md:mb-4 flex-shrink-0">
           {/* Left: Logo and title */}
@@ -168,7 +168,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
         </div>
 
         {/* Content area - shifted right */}
-        <div className="flex-1 flex flex-col lg:flex-row items-start justify-start gap-4 lg:gap-10 lg:pl-[15%] xl:pl-[18%] overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row items-start justify-start gap-4 lg:gap-10 lg:pl-[15%] xl:pl-[18%] min-h-0 overflow-hidden">
           <AnimatePresence mode="wait">
             {/* Left side - Category menu (when Work is selected) */}
             {showWorkSection && (
@@ -227,9 +227,9 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: easeOutExpo }}
-                className="flex-1 w-full overflow-hidden"
+                className="flex-1 w-full min-h-0"
               >
-                <div className="flex flex-row gap-4 md:gap-6 lg:gap-10 h-full">
+                <div className="flex flex-row gap-4 md:gap-6 lg:gap-10 h-full max-h-full">
                   {/* Profile Photo - Fixed, smaller on mobile */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -253,7 +253,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2, duration: 0.5, ease: easeOutExpo }}
-                    className="flex-1 max-w-2xl min-h-0 max-h-[calc(100vh-280px)] sm:max-h-[calc(100vh-300px)] md:max-h-[calc(100vh-260px)] overflow-y-auto pr-2 md:pr-4"
+                    className="flex-1 max-w-2xl min-h-0 overflow-y-auto pr-2 md:pr-4"
                     style={{
                       scrollbarWidth: 'thin',
                       scrollbarColor: 'rgba(5,5,5,0.2) transparent',
@@ -261,7 +261,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                       touchAction: 'pan-y'
                     }}
                   >
-                    <div className="space-y-3 md:space-y-4 pb-16">
+                    <div className="space-y-3 md:space-y-4 pb-20 pt-1">
                       <p
                         className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
