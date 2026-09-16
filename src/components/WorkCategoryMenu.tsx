@@ -2,11 +2,8 @@
 
 import { motion } from 'framer-motion';
 import {
-  Film,
-  Music,
-  Clapperboard,
-  Box,
-  Sparkles
+  Sparkles,
+  Layers
 } from 'lucide-react';
 
 type WorkCategory = {
@@ -19,39 +16,18 @@ type WorkCategory = {
 
 const categories: WorkCategory[] = [
   {
-    id: 'commercials',
-    title: 'Commercials',
-    subtitle: 'Brand Stories',
-    icon: Film,
-    projectCount: 5,
-  },
-  {
-    id: 'music-videos',
-    title: 'Music Videos',
-    subtitle: 'Motion Culture',
-    icon: Music,
-    projectCount: 8,
-  },
-  {
-    id: 'film-narrative',
-    title: 'Film / Narrative',
-    subtitle: 'Cinematic Worlds',
-    icon: Clapperboard,
-    projectCount: 4,
-  },
-  {
-    id: 'cg-compositing',
-    title: 'CG Compositing',
-    subtitle: 'Integrated Realities',
-    icon: Box,
-    projectCount: 6,
-  },
-  {
     id: 'post-production',
     title: 'Post Production',
     subtitle: 'Finish Everything',
     icon: Sparkles,
-    projectCount: 7,
+    projectCount: 6,
+  },
+  {
+    id: 'compositing',
+    title: 'Compositing',
+    subtitle: 'Visual Integration',
+    icon: Layers,
+    projectCount: 2,
   },
 ];
 

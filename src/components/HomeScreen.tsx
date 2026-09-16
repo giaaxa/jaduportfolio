@@ -6,12 +6,12 @@ import JaduLogo from './JaduLogo';
 import AmbientBackground from './AmbientBackground';
 import XMBNavigation from './XMBNavigation';
 import WorkCategoryMenu from './WorkCategoryMenu';
-import ProjectCard from './ProjectCard';
 import SystemInfo from './SystemInfo';
 import AudioController from './AudioController';
 import MobileWorkCategories from './MobileWorkCategories';
 import DPad from './DPad';
 import PhotographySection from './PhotographySection';
+import VideoGrid from './VideoGrid';
 
 interface HomeScreenProps {
   onLogoClick?: () => void;
@@ -19,20 +19,28 @@ interface HomeScreenProps {
 
 const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// Sample project data
-const sampleProject = {
-  id: '1',
-  title: 'BEYOND TOMORROW',
-  category: 'Commercial',
-  year: 2024,
-  thumbnail: '/assets/project-placeholder.jpg',
-  index: 1,
-  total: 5,
-};
+// Featured home video
+const homeVideo = { youtubeId: 'YC3DzNzB7iQ', title: 'Showreel' };
+
+// Post-production videos
+const postProductionVideos = [
+  { id: '1', youtubeId: 'IKlrSxIHXJ4', title: 'Outro | Dirty Work' },
+  { id: '2', youtubeId: 'XZIGCYD5u54', title: 'Documentary - Everything by me' },
+  { id: '3', youtubeId: 'WFT-3mAUluI', title: 'Euphoria ext scene | Directed' },
+  { id: '4', youtubeId: 'GPSzpb-hQ7Q', title: 'Introduction Credit Scene | Dirty Work' },
+  { id: '5', youtubeId: 'krU1ilp2SkE', title: 'Acting for Screen advert | Camera Operator and edited' },
+  { id: '6', youtubeId: 'aErLs85XCFU', title: 'A Close Cut | BFI course, edit and DOP' },
+];
+
+// Compositing videos
+const compositingVideos = [
+  { id: '1', youtubeId: 'UWwz7350Uow', title: 'RGBA Studios Mumbai', description: 'While working at RGBA studios Mumbai (2026 April)' },
+  { id: '2', youtubeId: 'zp1eTUJZOec', title: "Escape Studio's Assignment", description: "Escape Studio's Assignment" },
+];
 
 export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
-  const [activeNav, setActiveNav] = useState('work');
-  const [activeCategory, setActiveCategory] = useState('commercials');
+  const [activeNav, setActiveNav] = useState('home');
+  const [activeCategory, setActiveCategory] = useState('post-production');
   const [batteryLevel, setBatteryLevel] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('jadu-battery');
@@ -56,8 +64,8 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
   };
 
   // Navigation arrays for D-pad
-  const navItems = ['work', 'stills', 'profile', 'contact'];
-  const categories = ['commercials', 'music-videos', 'film', 'cg-compositing', 'post-production'];
+  const navItems = ['home', 'work', 'stills', 'profile', 'contact'];
+  const categories = ['post-production', 'compositing'];
 
   const handleDPadUp = () => {
     const currentIndex = categories.indexOf(activeCategory);
@@ -97,6 +105,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
     chargeBattery(2);
   };
 
+  const showHomeSection = activeNav === 'home';
   const showWorkSection = activeNav === 'work';
   const showProfileSection = activeNav === 'profile';
   const showStillsSection = activeNav === 'stills';
@@ -197,6 +206,28 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
         {/* Content area - shifted right */}
         <div className="flex-1 flex flex-col lg:flex-row items-start justify-start gap-4 lg:gap-10 lg:pl-[15%] xl:pl-[18%] min-h-0">
           <AnimatePresence mode="wait">
+            {/* Home Section - Featured Video */}
+            {showHomeSection && (
+              <motion.div
+                key="home-section"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="w-full lg:flex-1 lg:max-w-[720px] lg:ml-[280px]"
+              >
+                <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${homeVideo.youtubeId}?rel=0`}
+                    title={homeVideo.title}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </motion.div>
+            )}
+
             {/* Left side - Category menu (when Work is selected) */}
             {showWorkSection && (
               <>
@@ -232,17 +263,33 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
               </>
             )}
 
-            {/* Right side - Project card - bigger */}
-            {showWorkSection && (
+            {/* Post-production videos */}
+            {showWorkSection && activeCategory === 'post-production' && (
               <motion.div
-                key="project-card"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.5, delay: 0.1, ease: easeOutExpo }}
-                className="w-full lg:flex-1 lg:max-w-[720px]"
+                key="post-production-videos"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="w-full lg:flex-1 overflow-y-auto"
+                style={{ maxHeight: 'calc(100vh - 240px)' }}
               >
-                <ProjectCard project={sampleProject} />
+                <VideoGrid videos={postProductionVideos} category="Post Production" />
+              </motion.div>
+            )}
+
+            {/* Compositing videos */}
+            {showWorkSection && activeCategory === 'compositing' && (
+              <motion.div
+                key="compositing-videos"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="w-full lg:flex-1 overflow-y-auto"
+                style={{ maxHeight: 'calc(100vh - 240px)' }}
+              >
+                <VideoGrid videos={compositingVideos} category="Compositing" />
               </motion.div>
             )}
 
@@ -356,7 +403,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
             )}
 
             {/* Content for other nav items */}
-            {!showWorkSection && !showProfileSection && !showStillsSection && (
+            {!showHomeSection && !showWorkSection && !showProfileSection && !showStillsSection && (
               <motion.div
                 key="coming-soon"
                 initial={{ opacity: 0 }}
