@@ -11,6 +11,7 @@ import SystemInfo from './SystemInfo';
 import AudioController from './AudioController';
 import MobileWorkCategories from './MobileWorkCategories';
 import DPad from './DPad';
+import PhotographySection from './PhotographySection';
 
 interface HomeScreenProps {
   onLogoClick?: () => void;
@@ -51,7 +52,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
   };
 
   // Navigation arrays for D-pad
-  const navItems = ['work', 'profile', 'contact'];
+  const navItems = ['work', 'stills', 'profile', 'contact'];
   const categories = ['commercials', 'music-videos', 'film', 'cg-compositing', 'post-production'];
 
   const handleDPadUp = () => {
@@ -80,6 +81,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
 
   const showWorkSection = activeNav === 'work';
   const showProfileSection = activeNav === 'profile';
+  const showStillsSection = activeNav === 'stills';
 
   return (
     <motion.div
@@ -311,8 +313,22 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
               </motion.div>
             )}
 
+            {/* Stills/Photography Section */}
+            {showStillsSection && (
+              <motion.div
+                key="stills-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="flex-1 w-full overflow-hidden"
+              >
+                <PhotographySection />
+              </motion.div>
+            )}
+
             {/* Content for other nav items */}
-            {!showWorkSection && !showProfileSection && (
+            {!showWorkSection && !showProfileSection && !showStillsSection && (
               <motion.div
                 key="coming-soon"
                 initial={{ opacity: 0 }}
