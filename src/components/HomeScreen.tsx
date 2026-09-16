@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import JaduLogo from './JaduLogo';
 import AmbientBackground from './AmbientBackground';
@@ -41,14 +41,18 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
     return 1;
   });
 
-  const handleClick = () => {
+  const chargeBattery = (amount: number = 2) => {
     setBatteryLevel((prev) => {
-      const newLevel = Math.min(prev + 5, 100);
+      const newLevel = Math.min(prev + amount, 100);
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('jadu-battery', newLevel.toString());
       }
       return newLevel;
     });
+  };
+
+  const handleBatteryClick = () => {
+    chargeBattery(5);
   };
 
   // Navigation arrays for D-pad
@@ -59,29 +63,52 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
     const currentIndex = categories.indexOf(activeCategory);
     const newIndex = currentIndex > 0 ? currentIndex - 1 : categories.length - 1;
     setActiveCategory(categories[newIndex]);
+    chargeBattery(1);
   };
 
   const handleDPadDown = () => {
     const currentIndex = categories.indexOf(activeCategory);
     const newIndex = currentIndex < categories.length - 1 ? currentIndex + 1 : 0;
     setActiveCategory(categories[newIndex]);
+    chargeBattery(1);
   };
 
   const handleDPadLeft = () => {
     const currentIndex = navItems.indexOf(activeNav);
     const newIndex = currentIndex > 0 ? currentIndex - 1 : navItems.length - 1;
     setActiveNav(navItems[newIndex]);
+    chargeBattery(2);
   };
 
   const handleDPadRight = () => {
     const currentIndex = navItems.indexOf(activeNav);
     const newIndex = currentIndex < navItems.length - 1 ? currentIndex + 1 : 0;
     setActiveNav(navItems[newIndex]);
+    chargeBattery(2);
+  };
+
+  const handleNavSelect = (id: string) => {
+    setActiveNav(id);
+    chargeBattery(3);
+  };
+
+  const handleCategorySelect = (category: string) => {
+    setActiveCategory(category);
+    chargeBattery(2);
   };
 
   const showWorkSection = activeNav === 'work';
   const showProfileSection = activeNav === 'profile';
   const showStillsSection = activeNav === 'stills';
+
+  const profileScrollRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll position when profile section opens
+  useEffect(() => {
+    if (showProfileSection && profileScrollRef.current) {
+      profileScrollRef.current.scrollTop = 0;
+    }
+  }, [showProfileSection]);
 
   return (
     <motion.div
@@ -164,11 +191,11 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
 
         {/* Main navigation - XMB style - centered/right */}
         <div className="mb-2 md:mb-4 lg:pl-[18%] xl:pl-[22%] flex-shrink-0">
-          <XMBNavigation activeItem={activeNav} onItemSelect={setActiveNav} />
+          <XMBNavigation activeItem={activeNav} onItemSelect={handleNavSelect} />
         </div>
 
         {/* Content area - shifted right */}
-        <div className="flex-1 flex flex-col lg:flex-row items-start justify-start gap-4 lg:gap-10 lg:pl-[15%] xl:pl-[18%] min-h-0 overflow-hidden">
+        <div className="flex-1 flex flex-col lg:flex-row items-start justify-start gap-4 lg:gap-10 lg:pl-[15%] xl:pl-[18%] min-h-0">
           <AnimatePresence mode="wait">
             {/* Left side - Category menu (when Work is selected) */}
             {showWorkSection && (
@@ -184,7 +211,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 >
                   <WorkCategoryMenu
                     activeCategory={activeCategory}
-                    onCategorySelect={setActiveCategory}
+                    onCategorySelect={handleCategorySelect}
                   />
                 </motion.div>
 
@@ -199,7 +226,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 >
                   <MobileWorkCategories
                     activeCategory={activeCategory}
-                    onCategorySelect={setActiveCategory}
+                    onCategorySelect={handleCategorySelect}
                   />
                 </motion.div>
               </>
@@ -227,15 +254,15 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: easeOutExpo }}
-                className="flex-1 w-full min-h-0"
+                className="w-full"
               >
-                <div className="flex flex-row gap-4 md:gap-6 lg:gap-10 h-full max-h-full">
+                <div className="flex flex-row gap-4 md:gap-6 lg:gap-10">
                   {/* Profile Photo - Fixed, smaller on mobile */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.1, duration: 0.5, ease: easeOutExpo }}
-                    className="flex-shrink-0 self-start"
+                    className="flex-shrink-0"
                   >
                     <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 rounded-xl md:rounded-2xl overflow-hidden">
                       <img
@@ -250,18 +277,19 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
 
                   {/* Profile Content - Scrollable */}
                   <motion.div
+                    ref={profileScrollRef}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2, duration: 0.5, ease: easeOutExpo }}
-                    className="flex-1 max-w-2xl min-h-0 overflow-y-auto pr-2 md:pr-4"
+                    className="flex-1 max-w-2xl overflow-y-auto overflow-x-hidden pr-2 md:pr-4"
                     style={{
+                      maxHeight: 'calc(100vh - 240px)',
                       scrollbarWidth: 'thin',
                       scrollbarColor: 'rgba(5,5,5,0.2) transparent',
                       WebkitOverflowScrolling: 'touch',
-                      touchAction: 'pan-y'
                     }}
                   >
-                    <div className="space-y-3 md:space-y-4 pb-20 pt-1">
+                    <div className="space-y-3 md:space-y-4 pb-32">
                       <p
                         className="text-xs sm:text-sm md:text-base leading-relaxed text-[#050505]/80"
                         style={{ fontFamily: 'var(--font-primary)' }}
@@ -352,7 +380,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="absolute bottom-3 left-4 right-4 md:left-6 md:right-6 lg:left-8 lg:right-8 flex items-end justify-between"
+          className="absolute bottom-3 left-4 right-4 md:left-6 md:right-6 lg:left-8 lg:right-8 flex items-end justify-between z-20"
         >
           <div className="flex items-end gap-4">
             <div className="hidden md:block" onClick={(e) => e.stopPropagation()}>
@@ -372,7 +400,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
           </div>
 
           <button
-            onClick={handleClick}
+            onClick={handleBatteryClick}
             className="flex items-center gap-2 mb-1 cursor-pointer hover:opacity-70 transition-opacity"
             style={{ fontFamily: 'var(--font-mono)' }}
             aria-label="Charge battery"
