@@ -469,14 +469,14 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
             aria-label="Charge battery"
           >
             <div className="flex items-center gap-1">
-              <div className="relative w-6 h-3 border border-[#050505]/50 rounded-sm">
+              <div className={`relative w-6 h-3 border rounded-sm transition-colors duration-300 ${batteryLevel >= 100 ? 'border-green-500' : 'border-[#050505]/50'}`}>
                 <div
-                  className="absolute left-0.5 top-0.5 bottom-0.5 bg-[#050505]/70 rounded-[1px] transition-all duration-300"
+                  className={`absolute left-0.5 top-0.5 bottom-0.5 rounded-[1px] transition-all duration-300 ${batteryLevel >= 100 ? 'bg-green-500' : 'bg-[#050505]/70'}`}
                   style={{ width: `${Math.max((batteryLevel / 100) * 18, 2)}px` }}
                 />
-                <div className="absolute -right-[3px] top-1/2 -translate-y-1/2 w-[2px] h-1.5 bg-[#050505]/50 rounded-r-sm" />
+                <div className={`absolute -right-[3px] top-1/2 -translate-y-1/2 w-[2px] h-1.5 rounded-r-sm transition-colors duration-300 ${batteryLevel >= 100 ? 'bg-green-500' : 'bg-[#050505]/50'}`} />
               </div>
-              <span className="text-[9px] tracking-wide text-[#050505]/50">
+              <span className={`text-[9px] tracking-wide transition-colors duration-300 ${batteryLevel >= 100 ? 'text-green-500' : 'text-[#050505]/50'}`}>
                 {batteryLevel}%
               </span>
             </div>

@@ -110,11 +110,11 @@ export default function ContactSection() {
                 /* Contact message bubble */
                 <div className="flex justify-end">
                   <div
-                    className="group relative max-w-[85%] px-4 py-3 rounded-2xl rounded-br-md bg-[#050505]/[0.06] border border-[#050505]/[0.08] hover:bg-[#050505]/[0.08] transition-all duration-200"
+                    className="group relative max-w-[85%] px-4 py-3 rounded-2xl rounded-br-md bg-green-100/60 border border-green-200/60 hover:bg-green-100/80 transition-all duration-200"
                   >
                     {/* Icon */}
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#050505]/[0.06] flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-green-200/50 flex items-center justify-center flex-shrink-0">
                         {message.icon === 'phone' ? (
                           <svg
                             className="w-4 h-4 text-[#050505]/60"
@@ -197,7 +197,7 @@ export default function ContactSection() {
                     </div>
 
                     {/* Message tail */}
-                    <div className="absolute -right-1 bottom-2 w-3 h-3 bg-[#050505]/[0.06] border-r border-b border-[#050505]/[0.08] transform rotate-45" />
+                    <div className="absolute -right-1 bottom-2 w-3 h-3 bg-green-100/60 border-r border-b border-green-200/60 transform rotate-45" />
                   </div>
                 </div>
               )}
