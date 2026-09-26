@@ -12,6 +12,7 @@ import MobileWorkCategories from './MobileWorkCategories';
 import DPad from './DPad';
 import PhotographySection from './PhotographySection';
 import VideoGrid from './VideoGrid';
+import ContactSection from './ContactSection';
 
 interface HomeScreenProps {
   onLogoClick?: () => void;
@@ -109,6 +110,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
   const showWorkSection = activeNav === 'work';
   const showProfileSection = activeNav === 'profile';
   const showStillsSection = activeNav === 'stills';
+  const showContactSection = activeNav === 'contact';
 
   const profileScrollRef = useRef<HTMLDivElement>(null);
 
@@ -402,8 +404,22 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
               </motion.div>
             )}
 
+            {/* Contact Section */}
+            {showContactSection && (
+              <motion.div
+                key="contact-section"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="flex-1 w-full flex items-start justify-center lg:justify-start"
+              >
+                <ContactSection />
+              </motion.div>
+            )}
+
             {/* Content for other nav items */}
-            {!showHomeSection && !showWorkSection && !showProfileSection && !showStillsSection && (
+            {!showHomeSection && !showWorkSection && !showProfileSection && !showStillsSection && !showContactSection && (
               <motion.div
                 key="coming-soon"
                 initial={{ opacity: 0 }}

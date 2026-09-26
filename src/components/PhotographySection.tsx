@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface Album {
   id: string;
   name: string;
+  location?: string;
   images: string[];
 }
 
@@ -26,7 +27,11 @@ const albums: Album[] = [
   {
     id: 'natural-rhythm',
     name: 'The Natural Rhythm',
+    location: 'Mumbai, India',
     images: [
+      '/photography/natural-rhythm/DSC08883.JPG',
+      '/photography/natural-rhythm/DSC08885.JPG',
+      '/photography/natural-rhythm/DSC08889.JPG',
       '/photography/natural-rhythm/DSC08979.JPEG',
       '/photography/natural-rhythm/DSC08988.JPEG',
       '/photography/natural-rhythm/DSC08991.JPEG',
@@ -51,6 +56,61 @@ const albums: Album[] = [
       '/photography/cow/2S0A0702-2.jpeg',
       '/photography/cow/2S0A0705-2.jpeg',
       '/photography/cow/2S0A0707-2.jpeg',
+    ],
+  },
+  {
+    id: 'street',
+    name: 'Street',
+    images: [
+      '/photography/Street/2S0A0051 2.jpeg',
+      '/photography/Street/2S0A0138 2.jpeg',
+      '/photography/Street/2S0A0230 2.JPG',
+      '/photography/Street/2S0A0231 2.JPG',
+      '/photography/Street/IMG_0619.JPG',
+      '/photography/Street/IMG_0626.JPG',
+      '/photography/Street/IMG_0650.jpeg',
+      '/photography/Street/IMG_0651 2.JPG',
+    ],
+  },
+  {
+    id: 'freshers-fair',
+    name: "Fresher's Fair",
+    location: '21.09.26',
+    images: [
+      "/photography/Fresher's Fair 21.09.26/2S0A8671.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8672.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8676.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8678.JPG",
+      "/photography/Fresher's Fair 21.09.26/2S0A8680.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8681.JPG",
+      "/photography/Fresher's Fair 21.09.26/2S0A8685.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8694.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8704.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8707.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8717 2.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8720.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8723.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8726.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8728.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8732.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8733.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8735 2.jpg",
+      "/photography/Fresher's Fair 21.09.26/2S0A8735.jpg",
+    ],
+  },
+  {
+    id: 'football',
+    name: 'Football',
+    images: [
+      '/photography/Football/6500d080-ce52-4d5c-a81a-1d29bf2f0ade.JPG',
+      '/photography/Football/IMG_5139.JPG',
+      '/photography/Football/IMG_5140.JPG',
+      '/photography/Football/IMG_9808-Enhanced-NR.JPEG',
+      '/photography/Football/IMG_9841-Enhanced-NR.JPEG',
+      '/photography/Football/IMG_9888-Enhanced-NR.JPEG',
+      '/photography/Football/IMG_9909-Enhanced-NR.JPG',
+      '/photography/Football/VFL_G3_MOTM_2.jpg',
+      '/photography/Football/VFL_G3_Title.jpg',
     ],
   },
 ];
@@ -241,12 +301,13 @@ export default function PhotographySection() {
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 h-full w-full">
       {/* Album selector */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, ease: easeOutExpo }}
-        className="flex lg:flex-col gap-2 lg:gap-3 lg:w-48 flex-shrink-0 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0"
-      >
+      <div className="lg:h-[400px] lg:overflow-y-scroll flex-shrink-0" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(5,5,5,0.2) transparent' }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: easeOutExpo }}
+          className="flex lg:flex-col gap-2 lg:gap-3 lg:w-48 overflow-x-auto pb-2 lg:pb-24"
+        >
         <span
           className="hidden lg:block text-[10px] tracking-[0.2em] uppercase text-[#050505]/40 mb-2"
           style={{ fontFamily: 'var(--font-primary)' }}
@@ -272,6 +333,14 @@ export default function PhotographySection() {
             >
               {album.name}
             </span>
+            {album.location && (
+              <span
+                className="text-[10px] text-[#050505]/50 mt-0.5 block"
+                style={{ fontFamily: 'var(--font-primary)' }}
+              >
+                {album.location}
+              </span>
+            )}
             <span
               className="text-[10px] text-[#050505]/40 mt-0.5 block"
               style={{ fontFamily: 'var(--font-mono)' }}
@@ -280,7 +349,8 @@ export default function PhotographySection() {
             </span>
           </button>
         ))}
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* Scattered images area */}
       <motion.div
