@@ -21,7 +21,10 @@ interface HomeScreenProps {
 const easeOutExpo: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 // Featured home video
-const homeVideo = { youtubeId: 'YC3DzNzB7iQ', title: 'Showreel' };
+const homeVideo = { youtubeId: 'SKmq3RYIM40', title: 'Home' };
+
+// VFX Showreel
+const vfxShowreelVideo = { youtubeId: 'YC3DzNzB7iQ', title: 'VFX Showreel' };
 
 // Post-production videos
 const postProductionVideos = [
@@ -66,7 +69,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
 
   // Navigation arrays for D-pad
   const navItems = ['home', 'work', 'stills', 'profile', 'contact'];
-  const categories = ['post-production', 'compositing'];
+  const categories = ['post-production', 'compositing', 'vfx-showreel'];
 
   const handleDPadUp = () => {
     const currentIndex = categories.indexOf(activeCategory);
@@ -220,7 +223,7 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
               >
                 <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
                   <iframe
-                    src={`https://www.youtube.com/embed/${homeVideo.youtubeId}?rel=0`}
+                    src={`https://www.youtube.com/embed/${homeVideo.youtubeId}?rel=0&autoplay=1&mute=1`}
                     title={homeVideo.title}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -292,6 +295,28 @@ export default function HomeScreen({ onLogoClick }: HomeScreenProps) {
                 style={{ maxHeight: 'calc(100vh - 240px)' }}
               >
                 <VideoGrid videos={compositingVideos} category="Compositing" />
+              </motion.div>
+            )}
+
+            {/* VFX Showreel */}
+            {showWorkSection && activeCategory === 'vfx-showreel' && (
+              <motion.div
+                key="vfx-showreel"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: easeOutExpo }}
+                className="w-full lg:flex-1 lg:max-w-[720px]"
+              >
+                <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${vfxShowreelVideo.youtubeId}?rel=0`}
+                    title={vfxShowreelVideo.title}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               </motion.div>
             )}
 

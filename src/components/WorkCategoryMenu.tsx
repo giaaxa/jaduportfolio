@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion';
 import {
   Sparkles,
-  Layers
+  Layers,
+  Film
 } from 'lucide-react';
 
 type WorkCategory = {
@@ -28,6 +29,13 @@ const categories: WorkCategory[] = [
     subtitle: 'Visual Integration',
     icon: Layers,
     projectCount: 2,
+  },
+  {
+    id: 'vfx-showreel',
+    title: 'VFX Showreel',
+    subtitle: 'Visual Effects Reel',
+    icon: Film,
+    projectCount: 1,
   },
 ];
 

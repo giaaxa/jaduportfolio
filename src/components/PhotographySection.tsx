@@ -32,7 +32,6 @@ const albums: Album[] = [
       '/photography/natural-rhythm/DSC08883.JPG',
       '/photography/natural-rhythm/DSC08885.JPG',
       '/photography/natural-rhythm/DSC08889.JPG',
-      '/photography/natural-rhythm/DSC08979.JPEG',
       '/photography/natural-rhythm/DSC08988.JPEG',
       '/photography/natural-rhythm/DSC08991.JPEG',
       '/photography/natural-rhythm/DSC08996.JPEG',
